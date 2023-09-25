@@ -1,6 +1,8 @@
+require('dotenv').config();
 const User = require("../models/user")
 const asyncHandler = require("express-async-handler")
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 
 exports.user_create = asyncHandler( async (req, res, next) => {
     if (!req.body.email || !req.body.username || !req.body.password) {
@@ -13,6 +15,8 @@ exports.user_create = asyncHandler( async (req, res, next) => {
         password: hashPassword
     });
     const result = await user.save();
-    return res.status(201).json({ message: "User created successfully", user: result });
+    jwt.sign({user: user}, process.env.SECRET_KEY, (err, token) =>{
+        return res.status(201).json({ message: "User created successfully", user: result, auth: {token} });
+    })
 })
 

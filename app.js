@@ -16,8 +16,10 @@ main().catch((err) => console.log(err))
 
 // Routing
 const user = require("./routes/users")
+const url = require("./routes/urls")
 
 app.use("/users",user)
+app.use("/urls",url)
 
 app.listen(3000, () => {
     console.log(`App is running on http://localhost:${process.env.PORT}`)

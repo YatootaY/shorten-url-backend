@@ -17,7 +17,7 @@ exports.verifyTonken = (req, res, next) => {
 
 exports.user_create = asyncHandler( async (req, res, next) => {
     if (!req.body.email || !req.body.username || !req.body.password) {
-        return res.status(400).json({ message: "All fields are required" });
+        return res.sendStatus(400)
     }
     const hashPassword = bcrypt.hashSync(req.body.password,8)
     const user = new User({
@@ -29,6 +29,24 @@ exports.user_create = asyncHandler( async (req, res, next) => {
     jwt.sign({user: {email: user.email,username: user.username}}, process.env.SECRET_KEY, {expiresIn: '30 days'}, (err, token) =>{
         return res.status(201).json({user, auth:token})
     })
+})
+
+exports.user_login = asyncHandler( async (req, res, next) => {
+    if (!req.body.email || !req.body.password) {
+        return res.sendStatus(400)
+    }
+    try{
+        const user = await User.findOne({email: req.body.email})
+        if(!bcrypt.compareSync(req.body.password, user.password)){
+            return res.sendStatus(401)
+        }else{
+            jwt.sign({user: {email: user.email,username: user.username}}, process.env.SECRET_KEY, {expiresIn: '30 days'}, (err, token) =>{
+                return res.status(200).json({user, auth:token})
+            })
+        }
+    }catch(err){
+        console.log(err)
+    }
 })
 
 exports.user_get = asyncHandler(async(req,res,next) => {

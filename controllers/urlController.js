@@ -22,7 +22,7 @@ exports.url_create = asyncHandler( async(req, res, next) => {
     res.status(201).json(result.toJSON())
 })
 
-exports.url_get = asyncHandler( async(req, res, next) => {
+exports.url_fetch = asyncHandler( async(req, res, next) => {
     jwt.verify(req.token, process.env.SECRET_KEY, (err, authData) => {
         if (err){
             return res.sendStatus(403)

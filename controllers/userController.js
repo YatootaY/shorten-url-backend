@@ -61,7 +61,7 @@ exports.user_get = asyncHandler(async(req,res,next) => {
         if (err){
             res.sendStatus(403)
         }else{
-            return res.status(200).json({message: "You got it", authData})
+            return res.status(200).json({user: authData})
         }
     })
 })

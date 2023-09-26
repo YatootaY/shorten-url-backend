@@ -1,8 +1,10 @@
 const express = require("express")
 const urlController = require("../controllers/urlController")
-const { verifyTonken } = require("../util")
+const { verifyToken } = require("../util")
 const router = express.Router()
 
-router.post('/create', verifyTonken, urlController.url_create)
+router.post('/create', verifyToken, urlController.url_create)
+
+router.get("/:shortUrl", verifyToken, urlController.url_get)
 
 module.exports = router

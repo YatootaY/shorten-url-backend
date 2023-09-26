@@ -21,3 +21,16 @@ exports.url_create = asyncHandler( async(req, res, next) => {
     const result = await url.save()
     res.status(201).json(result.toJSON())
 })
+
+exports.url_get = asyncHandler( async(req, res, next) => {
+    jwt.verify(req.token, process.env.SECRET_KEY, (err, authData) => {
+        if (err){
+            return res.sendStatus(403)
+        }
+    })
+    if (!req.params.shortUrl){
+        return res.sendStatus(400)
+    }
+    const url = await Url.findOne({shortUrl: req.params.shortUrl})
+    return res.status(200).json(url.toJSON())
+})

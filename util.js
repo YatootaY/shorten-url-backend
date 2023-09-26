@@ -1,4 +1,4 @@
-exports.verifyTonken = (req, res, next) => {
+exports.verifyToken = (req, res, next) => {
     const bearerHeader = req.headers['authorization']
     if (typeof bearerHeader !== "undefined"){
         const bearer = bearerHeader.split(" ")

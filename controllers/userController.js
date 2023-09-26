@@ -40,23 +40,20 @@ exports.user_login = asyncHandler( async (req, res, next) => {
     if (!req.body.email || !req.body.password) {
         return res.sendStatus(400)
     }
-    try{
-        const user = await User.findOne({email: req.body.email})
-        if(!bcrypt.compareSync(req.body.password, user.password)){
-            return res.sendStatus(401)
-        }else{
-            const userData = {
-                id: user.id, 
-                email: user.email,
-                username: user.username
-            }
-            jwt.sign(userData, process.env.SECRET_KEY, {expiresIn: '30 days'}, (err, token) =>{
-                return res.status(200).json({user: userData, auth:token})
-            })
+    const user = await User.findOne({email: req.body.email})
+    if(user && bcrypt.compareSync(req.body.password, user.password)){
+        const userData = {
+            id: user.id, 
+            email: user.email,
+            username: user.username
         }
-    }catch(err){
-        console.log(err)
+        jwt.sign(userData, process.env.SECRET_KEY, {expiresIn: '30 days'}, (err, token) =>{
+            return res.status(200).json({user: userData, auth:token})
+        })
+    }else{
+        return res.sendStatus(401)
     }
+    
 })
 
 exports.user_get = asyncHandler(async(req,res,next) => {

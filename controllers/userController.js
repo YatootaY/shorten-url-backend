@@ -26,8 +26,13 @@ exports.user_create = asyncHandler( async (req, res, next) => {
         password: hashPassword
     });
     const result = await user.save();
-    jwt.sign({user: {email: user.email,username: user.username}}, process.env.SECRET_KEY, {expiresIn: '30 days'}, (err, token) =>{
-        return res.status(201).json({user, auth:token})
+    const userData = {
+        id: result.id, 
+        email: user.email,
+        username: user.username
+    }
+    jwt.sign(userData, process.env.SECRET_KEY, {expiresIn: '30 days'}, (err, token) =>{
+        return res.status(201).json({user: userData, auth:token})
     })
 })
 
@@ -40,8 +45,13 @@ exports.user_login = asyncHandler( async (req, res, next) => {
         if(!bcrypt.compareSync(req.body.password, user.password)){
             return res.sendStatus(401)
         }else{
-            jwt.sign({user: {email: user.email,username: user.username}}, process.env.SECRET_KEY, {expiresIn: '30 days'}, (err, token) =>{
-                return res.status(200).json({user, auth:token})
+            const userData = {
+                id: user.id, 
+                email: user.email,
+                username: user.username
+            }
+            jwt.sign(userData, process.env.SECRET_KEY, {expiresIn: '30 days'}, (err, token) =>{
+                return res.status(200).json({user: userData, auth:token})
             })
         }
     }catch(err){

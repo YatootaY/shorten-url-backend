@@ -32,5 +32,10 @@ exports.url_get = asyncHandler( async(req, res, next) => {
         return res.sendStatus(400)
     }
     const url = await Url.findOne({shortUrl: req.params.shortUrl})
-    return res.status(200).json(url.toJSON())
+    if (!url){
+        return res.sendStatus(404)
+    }
+    url.clicks.count += 1
+    const result = await url.save()
+    return res.status(200).json(result.toJSON())
 })

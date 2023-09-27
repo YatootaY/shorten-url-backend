@@ -2,6 +2,7 @@ const User = require("../models/user")
 const asyncHandler = require("express-async-handler")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const Url = require("../models/url")
 
 exports.user_create = asyncHandler( async (req, res, next) => {
     if (!req.body.email || !req.body.username || !req.body.password) {
@@ -47,9 +48,23 @@ exports.user_login = asyncHandler( async (req, res, next) => {
 exports.user_get = asyncHandler(async(req,res,next) => {
     jwt.verify(req.token, process.env.SECRET_KEY, (err, authData) => {
         if (err){
-            res.sendStatus(403)
+            return res.sendStatus(403)
         }else{
             return res.status(200).json({user: authData})
         }
     })
+})
+
+exports.user_links = asyncHandler(async (req, res, next) => {
+    jwt.verify(req.token, process.env.SECRET_KEY, (err, authData) => {
+        if (err){
+            return res.sendStatus(403)
+        }
+    })
+    const userLinks = await Url.find({userId: req.params.userId})
+    if (!userLinks){
+        return res.sendStatus(404)
+    }else{
+        return res.status(200).json({...userLinks})
+    }
 })

@@ -9,4 +9,6 @@ router.post('/login', userController.user_login)
 
 router.get('/me', verifyToken, userController.user_get)
 
+router.get("/:userId/links", verifyToken, userController.user_links)
+
 module.exports = router

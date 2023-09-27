@@ -61,10 +61,14 @@ exports.user_links = asyncHandler(async (req, res, next) => {
             return res.sendStatus(403)
         }
     })
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 10
     const userLinks = await Url.find({userId: req.params.userId})
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
     if (!userLinks){
         return res.sendStatus(404)
     }else{
-        return res.status(200).json({...userLinks})
+        return res.status(200).json({links: userLinks})
     }
 })

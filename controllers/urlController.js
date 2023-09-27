@@ -19,7 +19,7 @@ exports.url_create = asyncHandler( async(req, res, next) => {
         description: req.body.description ? req.body.description : ""
     })
     const result = await url.save()
-    res.status(201).json(result.toJSON())
+    return res.status(201).json(result.toJSON())
 })
 
 exports.url_fetch = asyncHandler( async(req, res, next) => {

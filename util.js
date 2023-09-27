@@ -6,6 +6,6 @@ exports.verifyToken = (req, res, next) => {
         req.token = bearerToken
         next()
     }else{
-        res.sendStatus(403);
+        return res.sendStatus(403);
     }
 }

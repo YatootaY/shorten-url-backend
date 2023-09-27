@@ -66,9 +66,10 @@ exports.user_links = asyncHandler(async (req, res, next) => {
     const userLinks = await Url.find({userId: req.params.userId})
         .skip((page - 1) * pageSize)
         .limit(pageSize)
+    const totalCount = await Url.countDocuments({ userId: req.params.userId });
     if (!userLinks){
         return res.sendStatus(404)
     }else{
-        return res.status(200).json({links: userLinks})
+        return res.status(200).json({links: userLinks, metadata: {total:totalCount}})
     }
 })

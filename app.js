@@ -21,6 +21,4 @@ const url = require("./routes/urls")
 app.use("/users",user)
 app.use("/urls",url)
 
-app.listen(3000, () => {
-    console.log(`App is running on http://localhost:${process.env.PORT}`)
-})
+app.listen(3000)
